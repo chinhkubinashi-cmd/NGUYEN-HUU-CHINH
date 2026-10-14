@@ -1,0 +1,117 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <script>
+      // Fix for Chrome extensions attempting to monkey-patch window.fetch when it only has a getter
+      (function() {
+        try {
+          var originalFetch = window.fetch;
+          var _fetch = typeof originalFetch === 'function' ? originalFetch.bind(window) : originalFetch;
+          Object.defineProperty(window, 'fetch', {
+            configurable: true,
+            enumerable: true,
+            get: function() {
+              return _fetch;
+            },
+            set: function(fn) {
+              _fetch = fn;
+            }
+          });
+        } catch (e) {
+          // Ignore if cannot redefine
+        }
+
+        // Prevent browser extension errors from breaking the page or showing unhandled error screens
+        window.addEventListener('error', function(e) {
+          if (
+            (e.filename && e.filename.indexOf('chrome-extension://') !== -1) ||
+            (e.message && e.message.indexOf('Cannot set property fetch of #<Window>') !== -1)
+          ) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            return true;
+          }
+        }, true);
+
+        window.addEventListener('unhandledrejection', function(e) {
+          var reason = e.reason;
+          if (reason) {
+            var msg = reason.message || (typeof reason === 'string' ? reason : '');
+            var stack = reason.stack || '';
+            if (
+              msg.indexOf('chrome-extension://') !== -1 ||
+              stack.indexOf('chrome-extension://') !== -1 ||
+              msg.indexOf('Cannot set property fetch of #<Window>') !== -1
+            ) {
+              e.preventDefault();
+              e.stopImmediatePropagation();
+            }
+          }
+        });
+      })();
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Văn Sĩ - Nghe & Ngẫm</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class'
+      }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fdfaf7;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        html.dark body {
+            background-color: #161412;
+            color: #e5e0db;
+        }
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+        /* Custom scrollbar for a literary feel */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        html.dark ::-webkit-scrollbar-track {
+            background: #1f1b18;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d1c4b9;
+            border-radius: 10px;
+        }
+        html.dark ::-webkit-scrollbar-thumb {
+            background: #3d352e;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #b8a99a;
+        }
+        html.dark ::-webkit-scrollbar-thumb:hover {
+            background: #544940;
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://esm.sh/@google/genai@^1.38.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <div id="root"></div>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>

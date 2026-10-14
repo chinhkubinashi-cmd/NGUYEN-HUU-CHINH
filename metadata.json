@@ -1,0 +1,7 @@
+{
+  "name": "Văn Sĩ - Nghe & Ngẫm Story Studio",
+  "description": "Một ứng dụng chuyên dụng dành cho nhà văn để sáng tác truyện dài thể loại Đời thường và Tâm lý xã hội, tối ưu cho audio 90 phút.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
